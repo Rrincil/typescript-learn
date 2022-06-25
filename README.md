@@ -4,6 +4,10 @@ TS学习
 - 1.是以JS为基础构建的语言，可在任何支持JS的平台中执行
 - 2.TS是JS的超集(扩展，新特性)，TS扩展了JS并添加了类型
 - 3. TS不能直接被JS解析器执行，需要编译----TS=====编译===》JS
+## 1.1vscode 增加扩展
+- 执行tsc 文件名 -w 监听
+## 1.2webstore配置
+- 监视：增加tsconfig.json文件-------tsc 文件 -w
 # 二、TS基础
 - 安装npm i typescript -g
 ## 2.1 基本变量
@@ -141,4 +145,21 @@ setlabel(myobj);
 ### 2.2.3
 ```ts
 
+```
+# 三、面向对象
+ - 要创建对象，就要先定义类，规定类里面的方法和属性
+## 3.1类
+- 使用类创造对象
+```ts
+class A{
+  name:string;
+  constructr(mes:string){
+    this.name = mes
+  }
+  greet(){
+    return 'heelo'+this.name;
+  }
+}
+let a = new A('tom');
+a.greet()
 ```
