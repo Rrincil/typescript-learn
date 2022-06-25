@@ -113,7 +113,32 @@ function b():never{ //什么都不返回，没有值
   // return null
 }
 ``` 
-## 2.2TS中类型
+### 2.1.3设置函数结构的类型申明（object）
+- (参数：参数类型)=>返回值
+```ts
+let abc5 : (x:string,y:string)=>string;
+abc5 = function(x1,x2){
+  return x1+x2;
+}
+``` 
+## 2.2 接口
+- interface
+### 2.2.1
+```ts
+interface a{
+  label:string;
+}
+function setlabel(label:a){
+  console.log(label);
+}
+let myobj = {size:20,label:'tom'};
+setlabel(myobj);
+```
+### 2.2.2
+```ts
+
+```
+### 2.2.3
 ```ts
 
 ```
