@@ -1,124 +1,87 @@
 (function(){
-  /**
-   * 1.Êı×Ö
-   */
-   let a:number;
-  
-   /**
-    * 2.²¼¶ûÀàĞÍ
-    */
-   let b:boolean;
-   
-   /**
-    * 3.×Ö·û´®
-    */ 
-   let tom:string;
-   
-   /**
-    * 4.Êı×éArray<ÀàĞÍ>
-    */
-   let list:number[];//Êı×éÊı×ÖÀàĞÍ
-   let list2:Array<number>;//Array<>
-   
-   /**
-    * 5.Ôª×é Tuple--¹Ì¶¨³¤¶ÈµÄÊı×é[ÀàĞÍ]
-    */
-   let d:[number,string];
-   let d2:[string,number];
-   d = [222,'tom'];
-   d2 = ['tom',222];
-   console.log(d2[0].substr(1)); // OK
-   // console.log(d[5].toString()); // OK, 'string' ºÍ 'number' ¶¼ÓĞ toString
-   
-   /**
-    * 6.enum Ã¶¾Ù
-    */
-   enum Color {Red, Green, Blue}//Ã¶¾ÙÈıÖÖÑÕÉ«
-   let c: Color = Color.Green; 
-   enum Color2 {Red = 1, Green=2, Blue}
-   let colorName: string = Color2[2];
-   console.log(colorName);  // ÏÔÊ¾'Green'ÒòÎªÉÏÃæ´úÂëÀïËüµÄÖµÊÇ2
-   
-   /**
-    * 7.AnyÀàĞÍ/unknowÀàĞÍ--Ïàµ±ÓÚ¶ÔTS¹Ø±ÕÁËÀàĞÍ¼ì²â
-    */
-   let x: any = 4; //ÏÔÊ¾anyĞ´·¨
-   let anyx; //ÒşÊ½anyĞ´·¨
-   x = "tom";
-   x = false; // ×îÖÕ²¼¶ûÀàĞÍ
-   //unknowÀàĞÍ²»ÄÜÖ±½Ó¸³Öµ¸øÆäËû±äÁ¿
-   let unknowx: unknown = 4; //unknowĞ´·¨
-   unknowx = "tom";
-   unknowx = false; // unknow
-   
-   /**
-    * 8.Void------voidÀàĞÍÏñÊÇÓëanyÀàĞÍÏà·´£¬
-    * Ëü±íÊ¾Ã»ÓĞÈÎºÎÀàĞÍ¡£ µ±Ò»¸öº¯ÊıÃ»ÓĞ·µ»ØÖµÊ±£¬ÄãÍ¨³£»á¼ûµ½Æä·µ»ØÖµÀàĞÍÊÇ void£º
-    */
-   
-   //ÉùÃ÷Ò»¸övoidÀàĞÍµÄ±äÁ¿Ö»ÄÜ¸³ÓèundefinedºÍnull£º
-   let xx: void = undefined;
-   function shang(): void {
-     console.log("tom");
-   }
-   /**
-    * 9.Null ºÍ Undefined
-    */
-   let u: undefined = undefined;
-   let n: null = null;
-   
-   /**
-    * Never--------neverÀàĞÍ±íÊ¾µÄÊÇÄÇĞ©ÓÀ²»´æÔÚµÄÖµµÄÀàĞÍ;
-    * 10.neverÀàĞÍÊÇÈÎºÎÀàĞÍµÄ×ÓÀàĞÍ£¬Ò²¿ÉÒÔ¸³Öµ¸øÈÎºÎÀàĞÍÃ»ÓĞÀàĞÍÊÇneverµÄ×ÓÀàĞÍ»ò¿ÉÒÔ¸³Öµ¸øneverÀàĞÍ£¨³ıÁËnever±¾ÉíÖ®Íâ£©¡£ ¼´Ê¹ anyÒ²²»¿ÉÒÔ¸³Öµ¸ønever¡£ ·µ»ØneverµÄº¯Êı±ØĞë´æÔÚÎŞ·¨´ïµ½µÄÖÕµã
-    */
-   
-   function error(message: string): never {
-     throw new Error(message);
-   }
-   
-   // ÍÆ¶ÏµÄ·µ»ØÖµÀàĞÍÎªnever
-   function fail() {
-     return error("Something failed");
-   }
-   
-   // ·µ»ØneverµÄº¯Êı±ØĞë´æÔÚÎŞ·¨´ïµ½µÄÖÕµã
-   function infiniteLoop(): never {
-     while (true) {
-     }
-   }
-   
-   /**
-    * 11.Object ±íÊ¾·ÇÔ­Ê¼ÀàĞÍ
-    * 
-    */
-   
-   declare function create(o: object | null): void;
-   create({ prop: 0 }); // OK
-   create(null); // OK
-   //ÓÃÀ´Ö¸¶¨¶ÔÏóÖĞ¿ÉÒÔ°üº¬ÄÄĞ©ÊôĞÔ
-   //ÔÚÊôĞÔºóÃæ¼ÓÒ»¸öÎÊºÅ£¿±íÊ¾ÊôĞÔÊÇ¿ÉÑ¡µÄ**************
-   let abc:{laber:string};
-   let abc2:{laber:string,laber2?:number};
-   abc = {laber:'tom'} //Ö»ÄÜ¼Ólaber²»ÄÜ¼ÓÆäËûµÄ
-   abc2 = {laber:'tom'} //laber2Îª¿ÉÑ¡²ÎÊı
-   
-   // [propname:string]:ÀàĞÍ ±íÊ¾¿É¶îÍâ¼Ó¸ÃÀàĞÍ²ÎÊı£¬ÀàĞÍÎªanyÔòÊÇËùÓĞÀàĞÍµÄ²ÎÊı*******
-   let abc3:{laber:string,[propname:string]:any};
-   abc3 = {laber:'xxx',laber2:'jery',label3:22};
-   let abc4:{laber:string,[propname:string]:string};//Ö»ÄÜ¼ÓstringÀàĞÍ²ÎÊı
-   abc4 = {laber:'xxx',laber2:'jery',label3:"22"};
-   // ÉèÖÃº¯Êı½á¹¹µÄÀàĞÍÉêÃ÷£¨object£©
-   let abc5 : (x:string,y:string)=>string;
-   abc5 = function(x1,x2){
-     return x1+x2;
-   }
-   
-   
-   /**
-    * 12.×ÖÃæÁ¿£¬ÀàËÆ³£Á¿²»¿É±ä
-    */
-   let tom22 :'tom22';
-   let filename :'tom'|'jery'; //Ö»ÄÜÊÇ£»"tom"»òÕß"jery"  
+//1.æ•°å­—
+let a:number;
+
+//2.å¸ƒå°”ç±»å‹
+let b:boolean;
+
+//3.å­—ç¬¦ä¸² 
+let tom:string;
+
+//4.æ•°ç»„Array<ç±»å‹>
+let list:number[];//æ•°ç»„æ•°å­—ç±»å‹
+let list2:Array<number>;//Array<>
+
+//5.å…ƒç»„ Tuple
+let d:[number,string];
+let d2:[string,number];
+d = [222,'tom'];
+d2 = ['tom',222];
+console.log(d2[0].substr(1)); // OK
+// console.log(d[5].toString()); // OK, 'string' å’Œ 'number' éƒ½æœ‰ toString
+
+//6.enum æšä¸¾
+enum Color {Red, Green, Blue}
+let c: Color = Color.Green; 
+enum Color2 {Red = 1, Green=2, Blue}
+let colorName: string = Color2[2];
+console.log(colorName);  // æ˜¾ç¤º'Green'å› ä¸ºä¸Šé¢ä»£ç é‡Œå®ƒçš„å€¼æ˜¯2
+
+//7.Anyç±»å‹--æƒ³è¦ä¸ºé‚£äº›åœ¨ç¼–ç¨‹é˜¶æ®µè¿˜ä¸æ¸…æ¥šç±»å‹çš„å˜é‡æŒ‡å®šä¸€ä¸ªç±»å‹ä½¿ç”¨any
+let x: any = 4;
+x = "tom";
+x = false; // æœ€ç»ˆå¸ƒå°”ç±»å‹
+
+//8.Void------voidç±»å‹åƒæ˜¯ä¸anyç±»å‹ç›¸åï¼Œå®ƒè¡¨ç¤ºæ²¡æœ‰ä»»ä½•ç±»å‹ã€‚ å½“ä¸€ä¸ªå‡½æ•°æ²¡æœ‰è¿”å›å€¼æ—¶ï¼Œä½ é€šå¸¸ä¼šè§åˆ°å…¶è¿”å›å€¼ç±»å‹æ˜¯ voidï¼š
+//å£°æ˜ä¸€ä¸ªvoidç±»å‹çš„å˜é‡åªèƒ½èµ‹äºˆundefinedå’Œnullï¼š
+let xx: void = undefined;
+function shang(): void {
+  console.log("tom");
+}
+//9.Null å’Œ Undefined
+let u: undefined = undefined;
+let n: null = null;
+
+//10.Never--------neverç±»å‹è¡¨ç¤ºçš„æ˜¯é‚£äº›æ°¸ä¸å­˜åœ¨çš„å€¼çš„ç±»å‹;neverç±»å‹æ˜¯ä»»ä½•ç±»å‹çš„å­ç±»å‹ï¼Œä¹Ÿå¯ä»¥èµ‹å€¼ç»™ä»»ä½•ç±»å‹
+//æ²¡æœ‰ç±»å‹æ˜¯neverçš„å­ç±»å‹æˆ–å¯ä»¥èµ‹å€¼ç»™neverç±»å‹ï¼ˆé™¤äº†neveræœ¬èº«ä¹‹å¤–ï¼‰ã€‚ å³ä½¿ anyä¹Ÿä¸å¯ä»¥èµ‹å€¼ç»™neverã€‚
+// è¿”å›neverçš„å‡½æ•°å¿…é¡»å­˜åœ¨æ— æ³•è¾¾åˆ°çš„ç»ˆç‚¹
+function error(message: string): never {
+  throw new Error(message);
+}
+
+// æ¨æ–­çš„è¿”å›å€¼ç±»å‹ä¸ºnever
+function fail() {
+  return error("Something failed");
+}
+
+// è¿”å›neverçš„å‡½æ•°å¿…é¡»å­˜åœ¨æ— æ³•è¾¾åˆ°çš„ç»ˆç‚¹
+function infiniteLoop(): never {
+  while (true) {
+  }
+}
+
+//11.Object è¡¨ç¤ºéåŸå§‹ç±»å‹
+
+// declare function create(o: object | null): void;
+
+// create({ prop: 0 }); // OK
+// create(null); // OK
+
+//æ  
+type myType = {
+  name:string;
+  age:number;
+}
+/**
+ * 1.ä½¿ç”¨typeæè¿°ä¸€ä¸ªå¯¹è±¡çš„ç±»å‹
+ * 2.åˆ›å»ºå¯¹è±¡å¹¶ä¸”ç”³æ˜è¯¥å¯¹è±¡çš„ç±»å‹cosnt myObj:ç±»å‹ = {}
+ *    æ­¤æ—¶å¯¹è±¡ä¸­æœ‰ä¸”ä»…æœ‰è¯¥ç±»å‹ä¸­çš„å‚æ•°--ä»…æœ‰name,age
+ */
+
+  const obj:myType = {
+  name:'ss',
+  age:20
+}
   })()
   
   

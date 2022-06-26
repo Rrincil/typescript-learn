@@ -460,3 +460,118 @@ blackDog.run(200);
   const newA2 = new A<number>(22)//指定泛型
 })()
 ```
+## 3.8 类型的泛型工具
+1. Ts内置工具类，简化TS中一些常见的操作
+### 1.Partial<Type> 用来构建（创造）一个类型，将Type的所有属性设置为可选
+```ts
+interface Props{
+  id:string;
+  name:string;
+  children:number[];
+}
+// 构造出来的新类型newType结构和Props相同，但是所有属性都变为可选的
+type newType = Partial<Props>
+const myobj:newType = {
+  id:'ddd'
+}
+```
+### 2.Readonly<Type> 只读类型，该类型创建的对象只可读取，不可写
+```ts
+interface Props{
+  id:string;
+  name:string;
+  children:number[];
+}
+type newType2 = Readonly<Props>
+const myobj2:newType2 = {
+  id:'ddf',
+  name:'fff',
+  children:[2]
+}
+```
+### 3.Pick<Type,keys> 选择属性，选择一组属性，来构造新类型;选择keys时用|分隔
+```ts
+interface Props{
+  id:string;
+  name:string;
+  children:number[];
+}
+type newType3 = Pick<Props,'id'|'name'>//只选择了id,则该类型只含有id
+const myobj3:newType3 ={
+  id:'jjj',
+  name:'ddd'
+}
+```
+### 4.Record<keys,Type> keys是一组属性，Type为这一组的类型;定义keys时用|分隔
+```ts
+interface Props{
+  id:string;
+  name:string;
+  children:number[];
+}
+type newType4 = Record<'a'|'b'|'c',string[]>
+const myobj4:newType4 = {
+  a: ['aa'],
+  b: ['bb'],
+  c: ['cc']
+}
+```
+## 3.9 类型的索引签名
+0. 当无法确定对象中含有哪些属性（对象中出现多个属性）就要用到索引签名类型
+1. [key:类型]只要是该类型的属性名称，都可以出现在对象中
+2. [key:类型] key只是一个占位符，可以换成任意合法的变量名
+3. **注意：JS中对象的({})的键是string类型
+```ts
+interface newType{
+  // 只要是string类型的属性名称都可以出现在对象中
+  [k:string] :number
+}
+interface newType2<T>{
+  [k:number] :T
+}
+const a:newType = {
+  a:333,
+  b:333,
+  c:555
+}
+const newa:newType2<number> = [1,2,3]
+```
+## 3.10 类型的映射
+* 基于旧类型，创建新类型（对象型），减少重复提升开发率
+* 1.映射类型只能在类型别名type中使用，不能在接口中使用
+* 2.keyof映射联合类型，获取其他类型的key；[key in keyof newType]:类型
+```ts
+type typeKeys = 'a'|'b'|'c';
+type props = {a:number,b:number,c:number} //重复率高
+// 做映射
+type props2 = {[key in typeKeys]:number}
+const myobj:props2 = {
+  a:22,
+  b:33,
+  c:44
+}
+```
+### （2）keyof映射联合类型，获取其他类型的key；[key in keyof newType]:类型
+```ts
+type newType = {
+  a:number,
+  b:string,
+  c:[]
+}
+type newType2 = {[key in keyof newType]:number}//  type newType2 = {a:number,b:number,c:number}
+```
+## 3.11 类型的索引查询
+1. 查询方式typenames[属性名]
+2. 同时查询多个索引类型 typenames[属性名1|属性名2];或者使用keyof----myType[keyof myType] 
+```ts
+type  myType = {
+  a:string,
+  b:number,
+  c:boolean
+}
+type types = myType['a'] //type types = string
+
+// 2.同时查询多个索引类型 
+type types2 = myType['a'|'b'] //type types = string|number
+type types3 = myType[keyof myType] //type types = string|number|boolean
+```

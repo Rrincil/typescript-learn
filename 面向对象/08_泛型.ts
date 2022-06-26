@@ -24,7 +24,7 @@
 
 
 
-  //在类中使用泛型
+  //在类中使用泛型----泛型类
   class A<k>{
     constructor(public name:k){
     }
