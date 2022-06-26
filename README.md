@@ -191,6 +191,28 @@ newtom.greet()
 console.log(A.namex); //static属性通过类调用
 
 ```
+### 3.1.1类的简写方法
+- 类的简写:在构造器中定义参数的时候加属性（public private protect）
+```ts
+(function(){
+  class A{
+    name:string;
+    age:number;
+    constructor(name:string,age:number){
+      this.name = name;
+      this.age = age;
+    }
+  }
+  // 类的简写:在构造器中定义参数的时候加属性（public private protect）
+  class A2{
+    constructor(public name:string,public age:number){
+
+    }
+  }
+  const newA = new A('tom',17);
+  const newA2 = new A2('tom',19);
+})()
+```
 ## 3.2 构造函数和this
 - 构造函数会在创建对象时调用,在实例方法中this表示当前实例
 ```ts
@@ -403,6 +425,38 @@ blackDog.run(200);
   newman.say();
 ```
 ## 3.7 泛型
-- 
+- 在类型不明确时候指定变量，使用时是什么类型该变量就是什么类型
+- 函数中：fn<T>(name:T):T{}
 ```ts
+(function(){
+  function fn<T>(name:T):T{
+    return name;
+  }
+  fn(22)//不指定泛型---ts会检测出
+  fn<string>('tom')//指定泛型
+  
+  //可以定义多个泛型
+  function fn2<T,K>(a:T,b:K):K{ 
+    console.log(b);
+    return b //返回K类型
+  }
+
+  //接口中使用泛型********
+  interface myinter{
+    age:number;
+  }
+  //泛型K必须是myinter的实现类
+  function fn3<T extends myinter>(a:T):T{
+    return a;
+  }
+  fn3({age:666});//必须含有age属性
+
+  //在类中使用泛型
+  class A<k>{
+    constructor(public name:k){
+    }
+  }  
+  const newA = new A('tom')//不指定泛型
+  const newA2 = new A<number>(22)//指定泛型
+})()
 ```
