@@ -1,0 +1,12 @@
+{
+  "name": "tanchishe",
+  "version": "1.0.0",
+  "description": "TS_tanchishe",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Rrincil",
+  "license": "ISC",
+  "keywords": []
+}
