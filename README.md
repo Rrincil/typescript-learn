@@ -575,3 +575,18 @@ type types = myType['a'] //type types = string
 type types2 = myType['a'|'b'] //type types = string|number
 type types3 = myType[keyof myType] //type types = string|number|boolean
 ```
+# 四、ts类型申明文件
+- 用来为已存在的JS库提供类型信息
+## 4.1 Ts中两种文件类型
+1. .ts文件（***代码实现文件***）
+> 1. 既包含类型信息又可执行代码
+> 2. 可以被编译成.js文件，再执行代码
+2. .d.ts文件（***类型声明文件***）
+> 1. 只包含类型信息的类型申明文件
+> 2. 不会生成.js文件，仅用于提供类型信息
+> 3. 用途：为js提供类型信息
+## 4.2 类型声明文件的类型
+1. 内置类型声明文件
+> 1.Ts为Js运行时可用的所有标准化内置API都提供了声明文件
+> 例如在使用数组时,数组所有方法都有对应代码提示和类型提示
+2. 第三方库的类型声明文件
