@@ -82,10 +82,21 @@ declare function create(o: object | null): void;
 create({ prop: 0 }); // OK
 create(null); // OK
 
-// create(42); // Error
-// create("string"); // Error
-// create(false); // Error
-// create(undefined); // Error
+//描述一个对象的类型
+type myType = {
+  name:string;
+  age:number;
+}
+/**
+ * 1.使用type描述一个对象的类型
+ * 2.创建对象并且申明该对象的类型cosnt myObj:类型 = {}
+ *    此时对象中有且仅有该类型中的参数--仅有name,age
+ */
+
+  const obj:myType = {
+  name:'ss',
+  age:20
+}
 ```
 ### 2.1.1类型断言
 - 用来告诉解析器变量的实际类型
@@ -125,41 +136,273 @@ abc5 = function(x1,x2){
   return x1+x2;
 }
 ``` 
-## 2.2 接口
-- interface
-### 2.2.1
-```ts
-interface a{
-  label:string;
-}
-function setlabel(label:a){
-  console.log(label);
-}
-let myobj = {size:20,label:'tom'};
-setlabel(myobj);
-```
-### 2.2.2
-```ts
-
-```
-### 2.2.3
-```ts
-
-```
 # 三、面向对象
  - 要创建对象，就要先定义类，规定类里面的方法和属性
 ## 3.1类
-- 使用类创造对象
+1. 使用类创建对象 
+2. 关键字 static readonly
+3. 类只能调用类属性，不能直接调用类方法
+4. 类的修饰符，具体看后面接口
+>   1. public 修饰的属性可以在任意位置访问(修改)----不写修饰符即默认public
+> 2. protected 受保护的属性，只能在当前类和当前类的子类访问(修改)
+> 3. private  私有属性 只能在类内部进行访问---****只能在类中访问
+          - 通过类中添加方法，使得私有属性可以被外部访问(修改)
+     
 ```ts
-class A{
-  name:string;
-  constructr(mes:string){
+class A {
+  /**
+   * 直接定义的属性是实例属性，通过对象的实例去访问
+   *   let newtom = new A();
+   *   newtom.name
+   */
+  name: string = 'tom';
+
+  /**
+   * static 静态属性，不需要创建对象就可以使用的属性,通过类调用
+   * A.namex
+   */
+  static namex: string = 'tom2';
+
+  /**
+   * readonly 只读属性 只能读取不能改变
+   */
+  readonly namey: string = 'tom3';
+  constructr(mes: string) {
     this.name = mes
   }
-  greet(){
-    return 'heelo'+this.name;
+
+  /**
+   *  类方法
+   */
+  greet() {
+    return 'heelo' + this.name;
+  }
+  /**
+   *  static 静态方法方法
+   */
+  static greet2() {
+    return 'heelo' + this.name;
   }
 }
-let a = new A('tom');
-a.greet()
+console.log(A.name);
+let newtom = new A();
+console.log(newtom.name);
+newtom.greet()
+console.log(A.namex); //static属性通过类调用
+
+```
+## 3.2 构造函数和this
+- 构造函数会在创建对象时调用,在实例方法中this表示当前实例
+```ts
+class Dog{
+  name:string;
+  color:string;
+  /**
+   * 构造函数会在创建对象时调用
+   * 在实例方法中this，this表示当前实例
+   */
+  constructor(name:string,color:string){
+    this.name = name;
+    this.color = color;
+  }
+  bark(voice:string){
+    console.log(voice);
+  }
+}
+
+let newblackDog = new Dog('小黑','黑色');
+console.log(newblackDog);
+newblackDog.bark('汪汪');
+
+```
+## 3.3 继承
+1. extends 使用继承之后，子类会有父类的全部属性和方法
+2. 可以对方法重写，和新增方法与属性。
+3. super() 调用父类构造函数, 派生类的构造函数必须有super()的调用
+```ts
+/**
+ * (function(){------------立即执行函数，防止重名
+ * })();
+ */
+class Animal{
+  name:string;
+  age:number;
+  constructor(name:string,age:number){
+    this.name = name;
+    this.age = age;
+  }
+  bark(vioce:string){
+    console.log(vioce);
+  }
+}
+/**
+ * 1.extends 使用继承之后，子类会有父类的全部属性和方法
+ * 2.可以对方法重写，和新增方法与属性。
+ */
+class Dog extends Animal{
+  name:string;
+  age:number;
+  color:string;
+  constructor(name:string,age:number,color:string){
+    //super() 调用父类构造函数, 派生类的构造函数必须有super()的调用
+    super(name,age);
+    this.color =color;
+  }
+  // 重写方法
+  bark(){
+    console.log('汪汪');
+  }
+  // 新增方法
+  run(bushu:number){
+    console.log(`跑了${bushu}步`);
+    
+  }
+}
+let blackDog = new Dog('旺财',18,'red')
+console.log(blackDog);
+console.log(blackDog.name);
+blackDog.run(200);
+```
+## 3.4 抽象类
+1. abstract 开头的类称为抽象类，抽象类不能，创建对象，只能被用来继承
+2. <span style="color:red;font-weight:800;">抽象类只能拿来继承（生而为父，我很抱歉😂）</span>
+3. 抽象类可以添加抽象方法
+    1. 抽象方法使用abstract开头，没有方法体，子类拿来重写
+    2. 继承了该抽象类（含抽象方法）,必须重写方法
+```ts
+(function(){
+  /**
+   * abstract 开头的类称为抽象类，
+   *   1.抽象类不能，创建对象，只能被用来继承（生而为父，我很抱歉😂）
+   *   2.抽象类可以添加抽象方法
+   *        抽象方法使用abstract开头，没有方法体，子类拿来重写
+   *        继承了该抽象类（含抽象方法）,必须重写方法
+   */
+  abstract class Animal{
+    name:string;
+    age:number;
+    abstract say(voices:string):void
+  }
+  //抽象类只能拿来继承
+  class Dog extends Animal {
+    constructor(){
+      super()
+    }
+    say(voice:string){
+      console.log(voice);
+    }
+  }
+})()
+```
+## 3.5 接口
+- <span style="color:red;font-weight:800;">***定义一个标准，限制类，给类一个规范***</span>
+1. interface 用来定义一个类结构，用来定义一个类中应该包含那些属性和方法
+2. 接口可以在定义类的时候限制类结构
+    - (1). 接口中所有的属性都不能有实际的值，接口只定义类的结构，不考虑实际值
+    - (2). 接口中所有方法都是抽象方法
+3. 接口也可当做类型申明去使用（类似type）
+    - (1). 类型检查器不会去检查属性的顺序，只要相应的属性存在并且类型也是对的就可以
+```ts
+(function(){
+  /**
+   * 1.使用type描述一个对象的类型
+   * 2.创建对象并且申明该对象的类型cosnt myObj:类型 = {}
+   *    此时对象中有且仅有该类型中的参数--仅有name,age
+   */
+  type myType = {
+    name:string;
+    age:number;
+  }
+   const obj:myType = {
+    name:'ss',
+    age:20
+  }
+
+  /**
+   * 1.interface 用来定义一个类结构，用来定义一个类中应该包含那些属性和方法
+   * 2.接口可以在定义类的时候限制类结构
+   *      （1）接口中所有的属性都不能有实际的值，接口只定义类的结构，不考虑实际值
+   *      （2）接口中所有方法都是抽象方法
+   * 3.接口也可当做类型申明去使用（类似type）
+   *    （1）类型检查器不会去检查属性的顺序，只要相应的属性存在并且类型也是对的就可以
+   */
+  interface myInterface{
+    name:string;
+    color:string;
+  }
+  const obj2:myInterface = {
+    color:'ddd',
+    name:'ss'
+  }
+
+  //定义一个接口,定义类属性和抽象方法
+  interface myClassInterface{
+    name:string;
+    say():void
+  }
+  //定义一个类来实现接口
+  class Dog implements myClassInterface {
+    name:'小黑';
+    say(){
+      console.log("汪汪汪");
+    }
+  }
+})()
+```
+## 3.6 属性的封装
+1. get 方法-----调用get方法：对象.方法名
+2. set方法----调用set方法：对象.方法名
+3. 使用get和set方法时报错：访问器仅在针对ECMAScript 5及更高版本时可用；使用命令tsc 项目名称 -t es5
+```ts
+  class person{
+    /**
+     * public 修饰的属性可以在任意位置访问(修改)----不写修饰符即默认public
+     * protected 受保护的属性，只能在当前类和当前类的子类访问(修改)
+     * private  私有属性 只能在类内部进行访问---****只能在类中访问
+     *          - 通过类中添加方法，使得私有属性可以被外部访问(修改)
+     */
+    public _name:string;
+    private _age:number;
+    protected _color:string;
+    // constructor(name:string,age:number,color:string){
+    //   this._age = age
+    // }
+    setname(value:number){
+      if(value>0){
+        this._age = value;
+      }
+      console.log(this._age);
+    }
+
+    /**
+     *  get 方法获取私有属性
+     *      - 调用get方法 -------对象.方法名
+     *  set 方法设置私有属性的值
+     *      - 调用set方法 -------对象.方法名
+     */
+    set ages(value:number){
+      if(value>0){
+        this._age = value;
+      }
+      console.log(this._age);     
+    }
+  }
+
+  const newperson = new person();
+  newperson.ages = 20;
+  console.log(newperson._name);
+  class man extends person{
+    name:string = 'tonm';
+    say(){
+      console.log(this._color);  
+      
+    }
+  }
+  console.log(man.name);
+  const newman = new man()
+  newman.say();
+```
+## 3.7 泛型
+- 
+```ts
 ```
