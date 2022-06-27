@@ -10,6 +10,8 @@ TS学习
 - 监视：增加tsconfig.json文件-------tsc 文件 -w
 # 二、TS基础
 - 安装npm i typescript -g
+- tsc init ：生成tsconfig.json文件
+- webpack搭建的时候使用ts-loader处理.ts文件
 ## 2.1 基本变量
 - 申明变量给变量同时指定类型
 - ![Alt 数据类型](./img/type.png)
@@ -98,7 +100,18 @@ type myType = {
   age:20
 }
 ```
-### 2.1.1类型断言
+### 2.1.1 declare关键字<span style="color:red;font-weight:800;">用于类型声明</span>
+1. 对于type,interface等这些明确的Ts类型（只能在Ts中使用）可以省略declare关键字
+2. 对于let,function等具有双重含义（JS,TS都可使用），应该声明declare关键字，明确指定此处用于类型声明
+```ts
+//types.d.ts
+declare let count:number;
+interface myinter{
+  name:string,
+  id:number
+}
+```
+### 2.1.2类型断言
 - 用来告诉解析器变量的实际类型
 ```ts
 /**
@@ -110,7 +123,7 @@ type myType = {
 s = a as string
 s = <string>a
 ``` 
-### 2.1.2函数参数返回值
+### 2.1.3函数参数返回值
 - 用来告诉解析器变量的实际类型
 ```ts
 function a(x:string,y:boolean):number{
@@ -128,7 +141,7 @@ function b():never{ //什么都不返回，没有值
   // return null
 }
 ``` 
-### 2.1.3设置函数结构的类型申明（object）
+### 2.1.4设置函数结构的类型申明（object）
 - (参数：参数类型)=>返回值
 ```ts
 let abc5 : (x:string,y:string)=>string;
@@ -590,3 +603,34 @@ type types3 = myType[keyof myType] //type types = string|number|boolean
 > 1.Ts为Js运行时可用的所有标准化内置API都提供了声明文件
 > 例如在使用数组时,数组所有方法都有对应代码提示和类型提示
 2. 第三方库的类型声明文件
+> 1.库自带声明文件
+> 2.由DefinitelyTyped提供
+## 4.3 自定义类型声明文件
+1. 在.d.ts文件中declare关键字的使用
+2. 需模块化导出 export {}
+3. 在.ts文件中导入import 文件
+```ts
+//types.d.ts
+declare let count:number;
+declare function add(x:number,y:number):number
+
+interface myinter{
+  name:string,
+  count
+}
+type myType = {
+  a:string,
+  b:number
+}
+//index.ts
+import './类型声明文件/types'
+const myobj:myType = {
+  a:'tom',  
+  b:29
+}
+const a:myinter = {
+  name:'tom',
+  count:999
+}
+console.log(add(1,2));
+```
