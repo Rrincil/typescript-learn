@@ -634,3 +634,195 @@ const a:myinter = {
 }
 console.log(add(1,2));
 ```
+# 五、在React中使用TS
+## 5.1. 使用CRA(create-react-app)创建支持TS的项目
+1. 创建TS项目命令 npx creacte-react-app 项目名称 -- template typescript
+2. 创建antd项目： yarn create react-app 项目名 --template typescript 配置<a herf="https://ant.design/docs/react/use-in-typescript-cn">查看官网<a>
+### 5.1.1 配置文件介绍
+1. react-app-env.d.ts(React 项目默认的类型声明文件)
+> ///三斜线指令：指定依赖的其他类型声明文件，types表示依赖的类型声明包的名称
+> 
+> react-script的类型声明文件包含两部分1.react,react-dom,node的类型；2.图片样式等模块的类型，以允许在代码中导入图片以及SVG等文件
+> TS会自动加载该.d.ts文件，以提提供类型声明（通过修改tsconfig.json中的include配置来验证）
+## 5.2. TS配置文件tsconfig.json
+- tsc --init可自动生成tsconfig.json配置文件
+1. include[文件名]：该文件下所有文件都会被TS执行
+## 5.3. React中常用类型
+1. 在TS项目中使用TypeScript实现组件类型校验（代替PropsTypes）----static Type Checking
+> 通过@types/react @types/react-dom类型申明包来提供类型 
+## 5.4. React中函数式组件的类型
+### 5.4.1 函数组件和属性的类型
+1. 简写写法fc------functionComponent<>泛型
+```tsx
+interface Props {
+  name:string;
+  age?:number;
+}
+const Head: FunctionComponent<Props> = ({name,age}) => {
+  return (
+    <div>
+      {name}
+    </div>
+  )
+}
+export default Head;
+//渲染Head组件 
+<Head name='tom'/>
+```
+2. 简写写法const Head = ({name,age}:Props) =>(<div></div>)
+```ts
+interface Props {
+  name:string;
+  age?:number;
+}
+const Head = ({name,age}:Props) =>(<div></div>)
+export default Head;
+//渲染Head组件 
+<Head name='tom'/>
+```
+### 5.4.2 函数组件属性的默认值
+1. 使用：组件名.defaultProps = {age:18}
+```ts
+interface Props {
+  name:string;
+  age?:number;
+}
+const Head: FunctionComponent<Props> = ({name,age}) => {
+  return (
+    <div>
+      {name}
+    </div>
+  )
+}
+Head.defaultProps = {
+  age:19
+}
+export default Head;
+//渲染Head组件 
+<Head name='tom'/>
+```
+2. 简写写法const Head = ({name,age}:Props) =>(<div></div>)
+```ts
+interface Props {
+  name:string;
+  age?:number;
+}
+const Head = ({name,age=19}:Props) =>(<div></div>)
+export default Head;
+//渲染Head组件 
+<Head name='tom'/>
+```
+### 5.4.3 函数组件事件绑定和事件对象
+-  查看事件类型: <input type="text" onchange={e=>{}}/>
+```ts
+const Head = ({name,age=19}:Props) =>{
+  const toshow = (e:React.MouseEvent<HTMLButtonElement>)=>{
+    //访问该Dom对象
+    console.log(e.cuuruntTarget.scroll);
+  }
+  const towrite = (e:React.ChangeEvent<HTMLInputElement>)=>{
+    //访问该Dom对象
+    console.log(e.target.value);
+  }  
+  return(
+    <div>
+      <p>{name}:{age}</p>
+      <button onClick={toshow}></button>
+      <input type="text" onchange={towrite}/>
+      {/* //查看事件类型 */}
+      <input type="text" onchange={e=>{}}/>
+      
+    </div>    
+  )
+}
+Head.defaultProps = {
+  age:19
+}
+export default Head;
+//渲染Head组件 
+<Head name='tom'/>
+```
+## 5.5. React中类式组件
+- 快捷键：tsrcc
+### 5.5.1 类组件的类型
+1. class C1 extends React.Component{}//无Prop无State
+2. class C2 extends React.Component<Props>{}//有Prop无State
+3. class C3 extends React.Component<{},State>{}//无Prop有State
+4. class C4 extends React.Component<Props,State>{}//有Prop有State
+### 5.5.2 类组件的属性和设置属性默认值
+1. 设置默认值static defaultProps:Partial<Props> = {name:'tom'}
+```ts
+import React, { Component } from 'react'
+type Props = {
+  name:string;
+  age?:number
+}
+type State = {}
+export default class Hello extends Component<Props, State> {
+  state = {}
+  static defaultProps:Partial<Props> = {
+    name:'tom'
+  }
+  render() {
+    const {name} = this.props
+    return (
+      <div>{name}</div>
+    )
+  }
+}
+
+```
+2. 简写方式
+```ts
+import React, { Component } from 'react'
+type Props = {
+  name:string;
+  age?:number
+}
+type State = {}
+export default class Hello extends Component<Props, State> {
+  state = {}
+  render() {
+    const {name='tom'} = this.props
+    return (
+      <div>{name}</div>
+    )
+  }
+}
+
+```
+### 5.5.2 类组件的状态和事件
+1.   state:State = { count:0 }
+```ts
+import React, { Component } from 'react'
+type Props = {
+  name:string;
+  age?:number
+}
+type State = {
+  count:number
+}
+export default class Hello extends Component<Props, State> {
+  state:State = {
+    count:0
+  }
+  add = ()=>{ 
+    const newcount = count++
+    this.setState({count:newcount})
+  }
+  // static defaultProps:Partial<Props> = {
+  //   name:'tom'
+  // }
+  render() {
+    const {name='tom'} = this.props
+    return (
+      <div>
+      {name}
+      <p>{this.state.count}</p>
+      <button onClick={toadd}></button>
+      </div>
+      )
+  }
+}
+
+```
